@@ -1,39 +1,297 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Socket.IO chat</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-      #messages { margin-bottom: 40px }
-    </style>
-  </head>
-  <body>
+
+<head>
+  <title>Socket.IO chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font: 13px Helvetica, Arial;
+    }
+
+    form {
+      background: #000;
+      padding: 3px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    form input {
+      border: 0;
+      padding: 10px;
+      width: 90%;
+      margin-right: .5%;
+    }
+
+    form button {
+      width: 9%;
+      background: rgb(130, 224, 255);
+      border: none;
+      padding: 10px;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #messages li {
+      padding: 5px 10px;
+    }
+
+    #messages li:nth-child(odd) {
+      background: #eee;
+    }
+
+    #messages {
+      margin-bottom: 40px;
+
+    }
+
+    .username {
+  font-weight: 700;
+  overflow: hidden;
+  padding-right: 15px;
+  text-align: right;
+} 
+/*chatbox*/
+#chat {
+      margin-top: 5%;
+      width: 50%;
+      background-color: rgba(18, 147, 187, 0.596);
+      border: #000;
+      margin-left: 40%;
+      height: 600px;
+      overflow: scroll;
+      border-radius: 10px;
+    }
+
+
+
+ul {
+  list-style: none;
+  word-wrap: break-word;
+}
+
+.pages {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.page {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+/* Login Page */
+
+.login.page {
+  /* background-color: black; */
+  background-size: cover;
+  background-image: url("https://previews.123rf.com/images/hermandesign2015/hermandesign20151801/hermandesign2015180100435/93381137-two-cute-pandas-in-a-bamboo-forest.jpg"); 
+}
+
+.login.page .form {
+  height: 100px;
+  margin-top: -100px;
+  position: absolute;
+
+  text-align: center;
+  top: 50%;
+  width: 100%;
+}
+
+.login.page .form .usernameInput {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(63, 60, 60, 0.472);
+  outline: none;
+  padding-bottom: 15px;
+  text-align: center;
+  width: 400px;
+}
+
+.login.page .title {
+  font-size: 200%;
+}
+
+.login.page .usernameInput {
+  font-size: 200%;
+  letter-spacing: 3px;
+}
+
+.login.page .title, .login.page .usernameInput {
+  color:#000;
+  font-weight: 100;
+}
+
+.left {
+  text-align: right;
+  background-color: rgba(183, 0, 255, 0.246);
+  border-radius:10px;
+
+}
+
+.right {
+  text-align: left;
+  background-color: rgba(183, 0, 255, 0.246);
+  border-radius:10px;
+
+}
+
+#login{
+  padding: 15px 25px;
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: rgba(7, 102, 114, 0.664);
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+#login:hover{
+  background-color: aqua; 
+}
+#login:active{
+  background-color: rgba(21, 121, 88, 0.815, 102, 114, 0.664);;
+  box-shadow: 0 5px rgba(160, 119, 6, 0.459);
+  transform: translateY(4px);
+}
+.card{
+  margin-left: 30%;
+  margin-right: 30%;
+  background-color: rgba(10, 10, 10, 0.281);
+  padding-bottom: 40px;
+  padding-top: 20px;
+  border-radius: 35px;
+  border-style: inset;
+}
+ #online {
+      float: left;
+      margin-top: 15%;
+      width: 20%;
+      background-color: rgb(153, 153, 255);
+      border: #000;
+      margin-left:10%;
+      height: 600px;
+      overflow: scroll;
+      border-radius: 10px;
+      padding: 2%;
+      text-align: center;
+      font-family: cursive;
+    }
+
+  </style>
+</head>
+
+<body>
+ 
+  <div id="activeuser">
+    <p id="online">Online</p><span id="span"></span>
+    <div id="active"></div>
+  </div>
+
+  <div id="chat">
     <ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
+
     </form>
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-      $(function () {
-        var socket = io();
-        $('form').submit(function(){
-          socket.emit('chat message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-        socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(msg));
-          window.scrollTo(0, document.body.scrollHeight);
-        });
+  </div>
+  <div id="log">
+    <li class="login page">
+      <div class="form">
+        <div class="card">
+          <center>
+            <h3 class="title">What's your nickname?</h3>
+            <input class="usernameInput" type="text" maxlength="14" /><br><br>
+            <button id="login">Log in</button>
+          </center>
+
+        </div>
+
+      </div>
+    </li>
+  </div>
+  <div id="typing"></div>
+
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#chat").hide();
+      $("#activeuser").hide();
+      var usernamei;
+      $("#login").click(function () {
+        usernamei = $(".usernameInput").val()
+        $("#log").hide();
+        $("#chat").show();
+        $("#activeuser").show();
+
+      })
+      $(".input").keydown(function () {
+        socket.emit("typing", { username: usernamei })
+      })
+    });
+    $(function () {
+      var socket = io();
+      $('form').submit(function (event) {
+        event.preventDefault();
+        socket.emit('chat message', { username: $(".usernameInput").val(), msg: $('#m').val() });
+        $('#m').val('');
+        return false;
       });
-    </script>
-  </body>
+      socket.on('chat message', function (data) {
+        var sender = $(".usernameInput").val();
+        if (sender == data.username) {
+          $('#messages').append($('<li class="right" style="margin-left: 50%">').text(data.username + ": " + data.msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        } else {
+          $('#messages').append($('<li class="right" style="margin-right: 50%">').text(data.username + ": " + data.msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        }
+      });
+      
+
+      var current = [];
+      socket.on('online', function (msg) {
+        for (let i = 0; i < msg.length; ++i) {
+          if (!current.includes(msg[i].username)) {
+            $("#online").append($("<p>", { id: msg[i], id: msg[i].username }),
+              $("<span>").text("  " + msg[i].username), $("<br>"));
+            current.push(msg[i].username);
+          }
+        }
+      });
+      var userTyping = [];
+      socket.on("typing", function (data) {
+        if (data.username != $("#usernameInput").val()) {
+          if (!now_typing.includes(data.username)) {
+            $("#typing").append($("<p>", { class: "typing" }), $("<span>").text("is typing..."))
+            userTyping.push(data);
+
+          }
+        }
+      });
+    });
+  </script>
+</body>
+
 </html>
