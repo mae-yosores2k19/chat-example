@@ -24,7 +24,8 @@
       padding: 3px;
       position: fixed;
       bottom: 0;
-      width: 100%;
+      width: 50%;
+      border-style: inset;
     }
 
     form input {
@@ -70,8 +71,8 @@
 #chat {
       margin-top: 5%;
       width: 50%;
-      background-color: rgba(18, 147, 187, 0.596);
-      border: #000;
+      background: linear-gradient(to bottom left, #ffffffc9 -23%, #0000009a 89%);
+      border-style: inset;
       margin-left: 40%;
       height: 600px;
       overflow: scroll;
@@ -141,14 +142,12 @@ ul {
 }
 
 .left {
-  text-align: right;
   background-color: rgba(183, 0, 255, 0.246);
   border-radius:10px;
 
 }
 
 .right {
-  text-align: left;
   background-color: rgba(183, 0, 255, 0.246);
   border-radius:10px;
 
@@ -185,36 +184,54 @@ ul {
 }
  #online {
       float: left;
-      margin-top: 15%;
+      margin-top: 20%;
       width: 20%;
-      background-color: rgb(153, 153, 255);
-      border: #000;
-      margin-left:10%;
-      height: 600px;
+      background: linear-gradient(to bottom right, #07f3d475 -3%, #0715e491 55%);
+      border-style: inset;
+      margin-left:15%;
+      height: 500px;
       overflow: scroll;
       border-radius: 10px;
       padding: 2%;
       text-align: center;
       font-family: cursive;
     }
+    p{
+      color: white;
+      font-size: 20px;
+    }
+    #m{
+      border-radius: 10px;
+    }
+    .convo{
+      background-size: cover;
+      background-image: url('https://cdn5.vectorstock.com/i/1000x1000/88/19/baby-panda-cartoon-vector-16308819.jpg')
+    }
 
   </style>
 </head>
 
 <body>
- 
-  <div id="activeuser">
-    <p id="online">Online</p><span id="span"></span>
-    <div id="active"></div>
+
+  <div class="convo">
+    <div id="user">
+      <div id="online">Active
+        <div class="online-list">
+
+        </div>
+
+      </div><span id="span"></span>
+
+    </div>
+    <div id="chat">
+      <ul id="messages"></ul>
+      <form action="">
+        <input id="m" autocomplete="off" /><button>Send</button>
+      </form>
+    </div>
   </div>
 
-  <div id="chat">
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
 
-    </form>
-  </div>
   <div id="log">
     <li class="login page">
       <div class="form">
@@ -236,28 +253,30 @@ ul {
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <script>
     $(document).ready(function () {
+      var socket = io();
+
       $("#chat").hide();
-      $("#activeuser").hide();
+      $("#user").hide();
       var usernamei;
       $("#login").click(function () {
         usernamei = $(".usernameInput").val()
         $("#log").hide();
         $("#chat").show();
-        $("#activeuser").show();
+        $("#user").show();
+        socket.emit('online', usernamei);
 
       })
-      $(".input").keydown(function () {
+      $(".input").on('keypress', function () {
         socket.emit("typing", { username: usernamei })
       })
-    });
-    $(function () {
-      var socket = io();
+
       $('form').submit(function (event) {
         event.preventDefault();
         socket.emit('chat message', { username: $(".usernameInput").val(), msg: $('#m').val() });
         $('#m').val('');
         return false;
       });
+      socket.emit('username');
       socket.on('chat message', function (data) {
         var sender = $(".usernameInput").val();
         if (sender == data.username) {
@@ -268,28 +287,41 @@ ul {
           window.scrollTo(0, document.body.scrollHeight);
         }
       });
-      
-
-      var current = [];
       socket.on('online', function (msg) {
-        for (let i = 0; i < msg.length; ++i) {
-          if (!current.includes(msg[i].username)) {
-            $("#online").append($("<p>", { id: msg[i], id: msg[i].username }),
-              $("<span>").text("  " + msg[i].username), $("<br>"));
-            current.push(msg[i].username);
-          }
-        }
-      });
-      var userTyping = [];
-      socket.on("typing", function (data) {
-        if (data.username != $("#usernameInput").val()) {
-          if (!now_typing.includes(data.username)) {
-            $("#typing").append($("<p>", { class: "typing" }), $("<span>").text("is typing..."))
-            userTyping.push(data);
+        $('.online-list').empty();
 
-          }
+        for (let i = 0; i < msg.length; i++) {
+          $('.online-list').append($("<p>", {
+            id: "active_" + i
+          }).text(msg[i].username))
+
         }
-      });
+
+      })
+
+
+
+      // var current = [];
+      // socket.on('online', function (msg) {
+      //   for (let i = 0; i < msg.length; ++i) {
+      //     if (!current.includes(msg[i].username)) {
+      //       $("#online").append($("<p>", { id: msg[i], id: msg[i].username }),
+      //         $("<span>").text("  " + msg[i].username), $("<br>"));
+      //       current.push(msg[i].username);
+
+      //     }
+      //   }
+      // });
+      // var userTyping = [];
+      // socket.on("typing", function (data) {
+      //   if (data.username != $(".usernameInput").val()) {
+      //     if (!now_typing.includes(data.username)) {
+      //       $("#typing").append($("<div>", { id: "typing" }), $("<span>").text("is typing..."))
+      //       userTyping.push(data);
+
+      //     }
+      //   }
+      // });
     });
   </script>
 </body>
