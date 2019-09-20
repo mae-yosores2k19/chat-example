@@ -69,14 +69,15 @@
 } 
 /*chatbox*/
 #chat {
-      margin-top: 5%;
-      width: 50%;
-      background: linear-gradient(to bottom left, #ffffffc9 -23%, #0000009a 89%);
-      border-style: inset;
-      margin-left: 40%;
-      height: 600px;
-      overflow: scroll;
-      border-radius: 10px;
+    margin-top: 5%;
+    width: 50%;
+    background: linear-gradient(to bottom left, #ffffffc9 -23%, #0000009a 89%);
+    border-style: inset;
+    margin-left: 43%;
+    height: 700px;
+    overflow: scroll;
+    border-radius: 18px;
+    padding: 3%;
     }
 
 
@@ -142,13 +143,13 @@ ul {
 }
 
 .left {
-  background-color: rgba(183, 0, 255, 0.246);
+  /* background-color: red; */
   border-radius:10px;
 
 }
 
 .right {
-  background-color: rgba(183, 0, 255, 0.246);
+  /* background-color: rgba(183, 0, 255, 0.246); */
   border-radius:10px;
 
 }
@@ -183,18 +184,19 @@ ul {
   border-style: inset;
 }
  #online {
-      float: left;
-      margin-top: 20%;
-      width: 20%;
-      background: linear-gradient(to bottom right, #07f3d475 -3%, #0715e491 55%);
-      border-style: inset;
-      margin-left:15%;
-      height: 500px;
-      overflow: scroll;
-      border-radius: 10px;
-      padding: 2%;
-      text-align: center;
-      font-family: cursive;
+    float: left;
+    margin-top: 0%;
+    width: 27%;
+    background: linear-gradient(to bottom right, #e444d100 -3%, #0d0d235e 55%);
+    border-style: inset;
+    margin-left: 8%;
+    height: 700px;
+    overflow: scroll;
+    border-radius: 29px;
+    padding: -5%;
+    text-align: center;
+    font-family: cursive;
+    padding: 3%;
     }
     p{
       color: white;
@@ -205,7 +207,7 @@ ul {
     }
     .convo{
       background-size: cover;
-      background-image: url('https://cdn5.vectorstock.com/i/1000x1000/88/19/baby-panda-cartoon-vector-16308819.jpg')
+      /* background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsuoziJGZFHikRJywDSYXdDqR8ASxIOs2PJWG-Y41zXV88JVzM') */
     }
 
   </style>
@@ -247,7 +249,9 @@ ul {
       </div>
     </li>
   </div>
-  <div id="typing"></div>
+  <div id="typing">
+
+  </div>
 
   <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -266,8 +270,9 @@ ul {
         socket.emit('online', usernamei);
 
       })
-      $(".input").on('keypress', function () {
-        socket.emit("typing", { username: usernamei })
+      $("#m").keypress(function () {
+        socket.emit('typing', usernamei)
+
       })
 
       $('form').submit(function (event) {
@@ -280,10 +285,10 @@ ul {
       socket.on('chat message', function (data) {
         var sender = $(".usernameInput").val();
         if (sender == data.username) {
-          $('#messages').append($('<li class="right" style="margin-left: 50%">').text(data.username + ": " + data.msg));
+          $('#messages').append($('<li class="right" style="margin-left: 50%;background-color:#00ff2863">').text(data.username + ": " + data.msg));
           window.scrollTo(0, document.body.scrollHeight);
         } else {
-          $('#messages').append($('<li class="right" style="margin-right: 50%">').text(data.username + ": " + data.msg));
+          $('#messages').append($('<li class="right" style="margin-right: 50%; background-color: #00ffe54a">').text(data.username + ": " + data.msg));
           window.scrollTo(0, document.body.scrollHeight);
         }
       });
@@ -298,30 +303,16 @@ ul {
         }
 
       })
+      socket.on('typing', function (msg) {
+        $('.istyping').remove()
+        $('#messages').append($("<p>", {
+          class: "istyping"
+        }).text(msg + " is typing.."));
+        setInterval(function () {
+          $('.istyping').remove()
+        }, 1000);
 
-
-
-      // var current = [];
-      // socket.on('online', function (msg) {
-      //   for (let i = 0; i < msg.length; ++i) {
-      //     if (!current.includes(msg[i].username)) {
-      //       $("#online").append($("<p>", { id: msg[i], id: msg[i].username }),
-      //         $("<span>").text("  " + msg[i].username), $("<br>"));
-      //       current.push(msg[i].username);
-
-      //     }
-      //   }
-      // });
-      // var userTyping = [];
-      // socket.on("typing", function (data) {
-      //   if (data.username != $(".usernameInput").val()) {
-      //     if (!now_typing.includes(data.username)) {
-      //       $("#typing").append($("<div>", { id: "typing" }), $("<span>").text("is typing..."))
-      //       userTyping.push(data);
-
-      //     }
-      //   }
-      // });
+      });
     });
   </script>
 </body>
