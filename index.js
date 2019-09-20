@@ -31,7 +31,7 @@ io.on('connection', function (socket) {
   socket.on('disconnect', function (user) {
     for (let i = 0; i < active.length; i++) {
       if (active[i].id == socket.id) {
-        active.splice(i, 1)
+        active.splice(i, 1)//removing the user account
         break;
       }
 
