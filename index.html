@@ -4,7 +4,15 @@
 <head>
   <title>Socket.IO chat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <!--  -->
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!--  -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -67,7 +75,6 @@
   padding-right: 15px;
   text-align: right;
 } 
-/*chatbox*/
 #chat {
     margin-top: 5%;
     width: 52%;
@@ -79,9 +86,6 @@
     border-radius: 18px;
     padding: 3%;
     }
-
-
-
 ul {
   list-style: none;
   word-wrap: break-word;
@@ -93,19 +97,18 @@ ul {
   padding: 0;
   width: 100%;
 }
-
 .page {
   height: 100%;
   position: absolute;
   width: 100%;
 }
-
-/* Login Page */
-
 .login.page {
-  /* background-color: black; */
   background-size: cover;
-  background-image: url("https://previews.123rf.com/images/hermandesign2015/hermandesign20151801/hermandesign2015180100435/93381137-two-cute-pandas-in-a-bamboo-forest.jpg"); 
+  background-image: url("https://image.freepik.com/free-vector/two-cute-panda-bamboo-forest_33070-35.jpg"); 
+  background-attachment: fixed;
+  background-position: center;
+  max-height: 100vh;
+  height: 100vh;
 }
 
 .login.page .form {
@@ -125,7 +128,7 @@ ul {
   outline: none;
   padding-bottom: 15px;
   text-align: center;
-  width: 400px;
+  width: 100%;
 }
 
 .login.page .title {
@@ -138,18 +141,17 @@ ul {
 }
 
 .login.page .title, .login.page .usernameInput {
-  color:#000;
+  color:white;
+  font-family: fantasy;
   font-weight: 100;
 }
 
 .left {
-  /* background-color: red; */
   border-radius:10px;
 
 }
 
 .right {
-  /* background-color: rgba(183, 0, 255, 0.246); */
   border-radius:10px;
 
 }
@@ -208,19 +210,33 @@ ul {
     }
     .convo{
       background-size: cover;
-      background-image: url('https://cdn5.vectorstock.com/i/1000x1000/88/19/baby-panda-cartoon-vector-16308819.jpg')
+      background-image: url('https://st3.depositphotos.com/7843760/13524/v/1600/depositphotos_135249466-stock-illustration-baby-panda-cartoon.jpg')
     }
     .titlee{
       text-align: center;
       font-size:20px;
+      margin-left:30%;
 
     }
+    
     h2,.titlee{
       color: aqua;
       font-family: cursive;
     }
-    
-
+    .icon{
+      text-align: justify;
+      color: rgb(12, 238, 208);
+      font-size: 20px;
+      position: relative;
+    }
+    span{
+      text-align: justify;
+      color: white;
+      font-size: 20px;
+      position: relative;
+      
+    }
+   
   </style>
 </head>
 
@@ -233,32 +249,34 @@ ul {
           <div class="online-list"></div>
         </div><span id="span"></span>
       </div>
-      <div id="chat"><span class="titlee"><u>Message</u></span>
-        <ul id="messages"></ul>
-        <form action="">
-          <input id="m" autocomplete="off" /><button>Send</button>
-        </form>
+      <div id="chat"><span class="titlee glyphicon glyphicon-envelope"><u>Message</u></span>
+        <ul id="messages">
+          <form action="">
+            <input id="m" autocomplete="off" /><button>Send</button>
+          </form>
+        </ul>
+
       </div>
     </div>
   </div>
-
-
-
-
   <div id="log">
     <li class="login page">
       <div class="form">
         <div class="card">
-          <center>
-            <h3 class="title">What's your nickname?</h3>
-            <input class="usernameInput" type="text" maxlength="14" /><br><br>
-            <button id="login">Log in</button>
-          </center>
+          <div class="card-body">
+            <center>
+              <h3 class="title">What is your nickname?</h3>
+              <input class="usernameInput" type="text" /><br><br>
+              <button id="login">Log in</button>
+            </center>
+          </div>
 
         </div>
-
       </div>
     </li>
+  </div>
+
+
   </div>
   <div id="typing">
 
@@ -269,7 +287,6 @@ ul {
   <script>
     $(document).ready(function () {
       var socket = io();
-
       $("#chat").hide();
       $("#user").hide();
       var usernamei;
@@ -279,13 +296,10 @@ ul {
         $("#chat").show();
         $("#user").show();
         socket.emit('online', usernamei);
-
       })
       $("#m").keypress(function () {
         socket.emit('typing', usernamei)
-
       })
-
       $('form').submit(function (event) {
         event.preventDefault();
         socket.emit('chat message', { username: $(".usernameInput").val(), msg: $('#m').val() });
@@ -305,14 +319,11 @@ ul {
       });
       socket.on('online', function (msg) {
         $('.online-list').empty();
-
         for (let i = 0; i < msg.length; i++) {
-          $('.online-list').append($("<p> ", {
+          $('.online-list').append($("<div>").css('float', "left").append('<br><span class="glyphicon glyphicon-user icon"></span>', $("<span>", {
             id: "active_" + i
-          }).text(msg[i].username))
-
+          }).text(msg[i].username)), "<br clear='all'>")
         }
-
       })
       socket.on('typing', function (msg) {
         $('.istyping').remove()
@@ -321,8 +332,7 @@ ul {
         }).text(msg + " is typing.."));
         setInterval(function () {
           $('.istyping').remove()
-        }, 1000);
-
+        }, 3000);
       });
     });
   </script>
