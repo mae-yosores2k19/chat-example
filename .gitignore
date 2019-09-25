@@ -1,1 +1,4 @@
 node_modules
+#heroku deploy
+.DS_Store
+    *.env/

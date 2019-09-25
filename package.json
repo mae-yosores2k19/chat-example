@@ -3,10 +3,29 @@
   "version": "0.0.1",
   "description": "my first socket.io app",
   "dependencies": {
-    "express": "^4.15.2",
+    "express": "^4.17.1",
     "socket.io": "^1.7.3"
   },
   "scripts": {
     "start": "node index.js"
+  },
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mae-yosores2k19/chat-example.git"
+  },
+  "keywords": [
+    "ChatApp",
+    "Socket"
+  ],
+  "author": "Jessa Mae Yosores",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mae-yosores2k19/chat-example/issues"
+  },
+  "homepage": "https://github.com/mae-yosores2k19/chat-example#readme",
+  "engines": {
+    "node": "10.15"
   }
 }
